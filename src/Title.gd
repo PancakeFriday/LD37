@@ -1,9 +1,9 @@
 extends Node2D
 
 var Text = {
-	0: "Three Rooms for the posh (freakin) kings under the sky",
+	0: "Three Rooms for the posh kings (the 1%) under the sky",
 	1: "Seven for the Dwarf-mates in their halls of stone,",
-	2: "Nine for 99% doomed to die,",
+	2: "Nine for the machine-like workers doomed to die,",
 	3: "One for the Dark Geek on his dark throne",
 	4: "In the Land of Cubicles where the Shadows lie",
 	5: "One Room to rule them all, One Room to find them,",
@@ -38,6 +38,9 @@ func run(dt):
 	for i in Text:
 		if elapsed > (i+1)*2:
 			set_fade(i,dt)
+			
+	if elapsed > 18:
+		return "done"
 	pass
 	
 func set_fade(i,dt):
