@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://img/Background.png" type="Texture" id=2]
 [ext_resource path="res://img/House_interior.png" type="Texture" id=3]
 [ext_resource path="res://Char.tscn" type="PackedScene" id=4]
-[ext_resource path="res://img/House.png" type="Texture" id=5]
+[ext_resource path="res://img/House_exterior.png" type="Texture" id=5]
+[ext_resource path="res://img/House.png" type="Texture" id=6]
 
 [node name="Game" type="Node2D"]
 
@@ -43,9 +44,15 @@ texture = ExtResource( 3 )
 
 transform/pos = Vector2( 500, 202 )
 
+[node name="House_exterior" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/pos = Vector2( 640, 249 )
+texture = ExtResource( 5 )
+
 [node name="House" type="Sprite" parent="."]
 
 transform/pos = Vector2( 640, 249 )
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 
 

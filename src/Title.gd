@@ -41,6 +41,7 @@ func run(dt):
 			
 	if elapsed > 18:
 		return "done"
+
 	pass
 	
 func set_fade(i,dt):
