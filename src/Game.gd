@@ -26,6 +26,8 @@ var Grabbed_object = {
 	Delta = Vector2()
 }
 
+var Thrown_objects = []
+
 func _ready():
 	get_node("House").show()
 	Char = get_node("Char")
@@ -124,6 +126,17 @@ func post_init_run(dt):
 	
 		var closest_object = get_closest_object(colliding_objects)
 		if(Input.is_mouse_button_pressed(BUTTON_LEFT) and closest_object.size() > 0):
+			# Check first, if the grabbed object was thrown in the first place
+			var i = 0
+			for v in Thrown_objects:
+				if v.Obj == closest_object[0]:
+					print("yuup")
+					print(Thrown_objects.size())
+					Thrown_objects.remove(i)
+					print(Thrown_objects.size())
+				i+=1
+
+
 			Grabbed_object.Grabbed = true
 			Grabbed_object.Obj = closest_object[0]
 			Grabbed_object.Dist = closest_object[1]
@@ -141,21 +154,34 @@ func post_init_run(dt):
 			print(Grabbed_object.Delta)
 	
 	# Drop object
-	if(Input.is_mouse_button_pressed(BUTTON_RIGHT)):
+	if(Grabbed_object.Grabbed and Input.is_mouse_button_pressed(BUTTON_RIGHT)):
 		Grabbed_object.Grabbed = false
 		Grabbed_object.Obj.set_modulate(Color(1,1,1,1))
+		
+		var a = get_slope(crosshair_line)
+		var alpha = atan(a)
+		print(sin(alpha))
+		Thrown_objects.push_back({
+			Obj = Grabbed_object.Obj,
+			Speed = Vector2(Char.dir*Char.force*cos(alpha),Char.dir*Char.force*sin(alpha))
+		})
 	
 	process_grabbed(crosshair_line)
+	
+	process_thrown(dt)
+
+func process_thrown(dt):
+	for v in Thrown_objects:
+		v.Speed = Vector2(v.Speed.x, v.Speed.y + 1)
+		var pos = v.Obj.get_pos()
+		v.Obj.set_pos(Vector2(pos.x + v.Speed.x*dt, pos.y + v.Speed.y*dt))
 
 func process_grabbed(line):
 	if(Grabbed_object.Grabbed):
 		var a = get_slope(line)
 		var alpha = atan(a)
 		var res = Vector2()
-		if( Char.dir > 0 ):
-			res = Grabbed_object.Dist * Vector2(cos(alpha), sin(alpha)) + Char.get_pos() - Grabbed_object.Delta;
-		else:
-			res = Grabbed_object.Dist * Vector2(-cos(alpha), -sin(alpha)) + Char.get_pos();
+		res = Grabbed_object.Dist * Char.dir * Vector2(cos(alpha), sin(alpha)) + Char.get_pos() - Grabbed_object.Delta;
 		Grabbed_object.Obj.set_pos(res)
 
 func get_slope(line):
@@ -188,6 +214,8 @@ func y(x, a, b):
 	return a*x+b
 		
 func collides(line, rect):
+	if(sign(rect.pos.x - Char.get_pos().x) != Char.dir):
+		return
 	# Get line into the form y = a*x + b
 	# y = (y1-y0)/(x1-x0) * (x - x0) + y0
 	# y = a*x - a*x0 + y0 => b = y0 - a*x0
