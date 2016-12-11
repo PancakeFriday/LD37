@@ -49,12 +49,17 @@ var Grabbed_object = {
 	Delta = Vector2()
 }
 
-var Portal_rando = true
+var Portal_rando = 10
 var Portal_positions = [Vector2(749.322998, 110.524002), Vector2(506.362, 254.529999), Vector2(818.968018, 254.473999),
 						Vector2(297.608002, 418.502014), Vector2(560.086975, 418.467987), Vector2(836.052002, 418.493988)]
 
 var Thrown_objects = []
 var Falling_objects = []
+
+var Shake_screen_time = 0
+
+var Comp_health = 150.0
+var Pl_health = 150.0
 
 func _ready():
 	get_node("House").show()
@@ -73,6 +78,31 @@ func _ready():
 		v.get_node("Animation").play()
 	
 	set_process(true)
+	
+	var CouchTex = load("res://img/Couch.png")
+	var FlowerTex= load("res://img/Flower.png")
+	for i in range(0,10):
+		randomize()
+		var SomeCouch = Sprite.new()
+		SomeCouch.set_texture(CouchTex)
+		SomeCouch.set_centered(false)
+		var pos = Vector2()
+		var index = randi()%3
+		pos.x = rand_range(Levels[index].Left, Levels[index].Right - CouchTex.get_width())
+		pos.y = Levels[index].Floor - CouchTex.get_height()
+		SomeCouch.set_pos(pos)
+		get_node("Food").add_child(SomeCouch)
+	for i in range(0,5):
+		randomize()
+		var SomeCouch = Sprite.new()
+		SomeCouch.set_texture(FlowerTex)
+		SomeCouch.set_centered(false)
+		var pos = Vector2()
+		var index = randi()%3
+		pos.x = rand_range(Levels[index].Left, Levels[index].Right - FlowerTex.get_width())
+		pos.y = Levels[index].Floor - FlowerTex.get_height()
+		SomeCouch.set_pos(pos)
+		get_node("Food").add_child(SomeCouch)
 	
 	pass
 
@@ -109,19 +139,39 @@ func post_init_run(dt):
 		get_node("Camera").set_offset(Vector2(get_node("Camera").get_offset().x, 346))
 	var campos = get_node("Camera").get_offset()
 	var charpos = Char.get_pos()
+	
+	if(Shake_screen_time > 0):
+		get_node("Camera").set_offset(campos + Vector2(randi()%6 - 3, randi()%6 - 3))
+		Shake_screen_time -= dt
+	campos = get_node("Camera").get_offset()
 
 	# Don't touch this dadadada
 	mouse_pos_trans = get_viewport().get_mouse_pos()*cam_scale + get_node("Camera").get_offset()
 	
+	# Health bars
+	if(campos.x > 0):
+		get_node("Health_Comp").show()
+		get_node("Health_Pl").show()
+		get_node("Health_Comp").set_pos(campos + Vector2(150,300))
+		get_node("Health_Pl").set_pos(campos + Vector2(440,300))
+	else:
+		get_node("Health_Comp").show()
+		get_node("Health_Pl").show()
+		get_node("Health_Comp").set_pos(Vector2(150,300 + campos.y))
+		get_node("Health_Pl").set_pos(Vector2(440,300 + campos.y))
+		
+	print(Comp_health/150)
+	get_node("Health_Comp/Bar").set_scale(Vector2(Comp_health/150,1))
+	get_node("Health_Pl/Bar").set_scale(Vector2(Pl_health/150,1))
+	
 	# Randomize portals
-	if(elapsed > 10):
-		if elapsed % 8 == 0:
-			if Portal_rando:
-				Portal_rando = false
-				var ran = randi()%6
-				get_node("Portals/Portal2").set_pos(Portal_positions[ran])
-		else:
-			Portal_rando = true
+	if Portal_rando < 0:
+		Portal_rando = false
+		var ran = randi()%6
+		get_node("Portals/Portal2").set_pos(Portal_positions[ran])
+		Portal_rando = 6
+	
+	Portal_rando -= dt
 	
 	if(Input.is_action_pressed("run")):
 		Char.move_speed = 4
@@ -214,10 +264,7 @@ func post_init_run(dt):
 			var i = 0
 			for v in Thrown_objects:
 				if v.Obj == closest_object[0]:
-					print("yuup")
-					print(Thrown_objects.size())
 					Thrown_objects.remove(i)
-					print(Thrown_objects.size())
 				i+=1
 
 
@@ -235,7 +282,6 @@ func post_init_run(dt):
 			
 			Grabbed_object.Delta = res - closest_object[0].get_pos()
 			Grabbed_object.Obj.set_modulate(Color(0.8,0.8,1,1))
-			print(Grabbed_object.Delta)
 	
 	# Drop object
 	if(Grabbed_object.Grabbed and Input.is_mouse_button_pressed(BUTTON_RIGHT)):
@@ -244,7 +290,6 @@ func post_init_run(dt):
 		
 		var a = get_slope(crosshair_line)
 		var alpha = atan(a)
-		print(sin(alpha))
 		Thrown_objects.push_back({
 			Obj = Grabbed_object.Obj,
 			Speed = Vector2(Char.dir*Char.force*cos(alpha),Char.dir*Char.force*sin(alpha)),
@@ -267,9 +312,16 @@ func food_in_portal(food, portal):
 	return false
 
 func process_falling(dt):
+	var i = 0
 	for v in Falling_objects:
 		if(v.get_pos().y < 175):
 			v.set_pos(Vector2(v.get_pos().x, v.get_pos().y + 100*dt))
+		else:
+			Comp_health -= 10
+			Shake_screen_time = 0.9
+			Falling_objects.remove(i)
+			print(Comp_health)
+		i += 1
 	
 func process_thrown(dt, portal):
 	var i=0
@@ -298,10 +350,10 @@ func process_thrown(dt, portal):
 		v.Obj.set_pos(move_to)
 		
 		if(food_in_portal(v.Obj, portal)):
-			print("yo")
 			Thrown_objects.remove(i)
-			v.Obj.set_pos(Vector2(506,110))
+			v.Obj.set_pos(Vector2(512 - v.Obj.get_texture().get_width()/2,110))
 			Falling_objects.push_back(v.Obj)
+			Portal_rando = 0
 		
 		i += 1
 
