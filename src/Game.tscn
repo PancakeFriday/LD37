@@ -56,7 +56,13 @@ texture = ExtResource( 5 )
 
 [node name="Couch_1" type="Sprite" parent="Food"]
 
-transform/pos = Vector2( 800, 160.5 )
+transform/pos = Vector2( 800, 203.5 )
+texture = ExtResource( 6 )
+centered = false
+
+[node name="Couch_2" type="Sprite" parent="Food"]
+
+transform/pos = Vector2( 860, 203.5 )
 texture = ExtResource( 6 )
 centered = false
 

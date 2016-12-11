@@ -100,16 +100,25 @@ func post_init_run(dt):
 
 	Char.get_node("Crosshair").set_points(Char.get_pos(), mouse_pos_trans)
 	
-	var crosshair_line = [Char.get_pos(), mouse_pos_trans]
-	var Couch_rect = get_node("Food/Couch_1").get_item_and_children_rect()
-	var Couch_pos = get_node("Food/Couch_1").get_pos()
-	Couch_rect = Rect2(Couch_pos, Couch_rect.size)
-	print(Couch_rect)
+	#var Couch_rect = get_node("Food/Couch_1").get_item_rect()
+	#var Couch_pos = get_node("Food/Couch_1").get_pos()
+	#Couch_rect = Rect2(Couch_pos, Couch_rect.size)
 	
-	if collides(crosshair_line, Couch_rect):
-		get_node("Food/Couch_1").set_modulate(Color(1,0,0,1))
-	else:
-		get_node("Food/Couch_1").set_modulate(Color(1,1,1,1))
+	#if collides(crosshair_line, Couch_rect):
+	#	get_node("Food/Couch_1").set_modulate(Color(1,0,0,1))
+	#else:
+	#	get_node("Food/Couch_1").set_modulate(Color(1,1,1,1))
+		
+	var crosshair_line = [Char.get_pos(), mouse_pos_trans]
+	for v in get_node("Food").get_children():
+		var Food_rect = v.get_item_rect()
+		var Food_pos = v.get_pos()
+		Food_rect = Rect2(Food_pos, Food_rect.size)
+		
+		if collides(crosshair_line, Food_rect):
+			v.set_modulate(Color(1,0,0,1))
+		else:
+			v.set_modulate(Color(1,1,1,1))
 	
 # check collisions
 func y(x, a, b):
