@@ -7,7 +7,7 @@ extends Node2D
 var origin = Vector2(0,0)
 var destination = Vector2(100,100)
 var color = Color(1,1,1,0)
-var spacing = 7
+var spacing = 20
 var width = 3
 
 func _ready():
@@ -22,7 +22,7 @@ func _draw():
 	# (2,2) -> (3,3)
 	# (4,4) -> (5,5)
 	# (6,6) -> (7,7) 
-	for i in range(0,100):
+	for i in range(0,200):
 		var zero = (destination-origin).normalized()
 		draw_line(zero*i*spacing, zero*(i*spacing + width), color, 1.0)
 	pass
@@ -30,5 +30,5 @@ func _draw():
 func set_points(t, u):
 	origin = t
 	destination = u
-	color = Color(1,1,1,1)
+	color = Color(1,1,1,0.4)
 	update()

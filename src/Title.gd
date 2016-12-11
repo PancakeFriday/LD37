@@ -1,7 +1,7 @@
 extends Node2D
 
 var Text = {
-	0: "Three Rooms for the posh kings (the 1%) under the sky",
+	0: "Three Rooms for the posh kings under the sky",
 	1: "Seven for the Dwarf-mates in their halls of stone,",
 	2: "Nine for the machine-like workers doomed to die,",
 	3: "One for the Dark Geek on his dark throne",
