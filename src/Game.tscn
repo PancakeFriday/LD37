@@ -1,15 +1,17 @@
-[gd_scene load_steps=11 format=1]
+[gd_scene load_steps=13 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://img/Background.png" type="Texture" id=2]
 [ext_resource path="res://img/House_interior.png" type="Texture" id=3]
 [ext_resource path="res://Char.tscn" type="PackedScene" id=4]
-[ext_resource path="res://img/House_exterior.png" type="Texture" id=5]
+[ext_resource path="res://img/Computer.png" type="Texture" id=5]
 [ext_resource path="res://img/Couch.png" type="Texture" id=6]
 [ext_resource path="res://img/Flower.png" type="Texture" id=7]
 [ext_resource path="res://Portal.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Portal2.tscn" type="PackedScene" id=9]
-[ext_resource path="res://img/House.png" type="Texture" id=10]
+[ext_resource path="res://Portal3.tscn" type="PackedScene" id=10]
+[ext_resource path="res://img/House_exterior.png" type="Texture" id=11]
+[ext_resource path="res://img/House.png" type="Texture" id=12]
 
 [node name="Game" type="Node2D"]
 
@@ -48,17 +50,17 @@ texture = ExtResource( 3 )
 
 transform/pos = Vector2( 619.931, 202 )
 
-[node name="House_exterior" type="Sprite" parent="."]
+[node name="Computer" type="Sprite" parent="."]
 
-visibility/visible = false
-transform/pos = Vector2( 640, 249 )
+transform/pos = Vector2( 511.815, 164.92 )
+transform/scale = Vector2( 0.993218, 1.00182 )
 texture = ExtResource( 5 )
 
 [node name="Food" type="Node2D" parent="."]
 
 [node name="Couch_1" type="Sprite" parent="Food"]
 
-transform/pos = Vector2( 800, 203.5 )
+transform/pos = Vector2( 678.454, 515.345 )
 texture = ExtResource( 6 )
 centered = false
 
@@ -74,19 +76,35 @@ transform/pos = Vector2( 771, 210.5 )
 texture = ExtResource( 7 )
 centered = false
 
-[node name="Portal" parent="." instance=ExtResource( 8 )]
+[node name="Portals" type="Node2D" parent="."]
+
+[node name="Portal" parent="Portals" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 595.01, 165.492 )
 transform/scale = Vector2( 1, 1.00011 )
 
-[node name="Portal2" parent="." instance=ExtResource( 9 )]
+[node name="Portal2" parent="Portals" instance=ExtResource( 9 )]
 
-transform/pos = Vector2( 749.323, 110.524 )
+transform/pos = Vector2( 749.642, 110.469 )
+
+[node name="Portal4" parent="Portals" instance=ExtResource( 9 )]
+
+transform/pos = Vector2( 510.323, 110.524 )
+
+[node name="Portal3" parent="Portals" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 948.369, 165.497 )
+
+[node name="House_exterior" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/pos = Vector2( 640, 249 )
+texture = ExtResource( 11 )
 
 [node name="House" type="Sprite" parent="."]
 
 visibility/visible = false
 transform/pos = Vector2( 640, 249 )
-texture = ExtResource( 10 )
+texture = ExtResource( 12 )
 
 

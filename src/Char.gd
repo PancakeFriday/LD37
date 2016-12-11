@@ -8,7 +8,7 @@ var move_speed = 2.5
 var grav = 10
 var fallspeed = 0
 var dir = 1
-var force = 100
+var force = 200
 
 func _ready():
 	# Called every time the node is added to the scene.

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://Char.gd" type="Script" id=1]
 [ext_resource path="res://Crosshair.tscn" type="PackedScene" id=2]
 [ext_resource path="res://img/Char.png" type="Texture" id=3]
+[ext_resource path="res://img/Arrow.png" type="Texture" id=4]
 
 [sub_resource type="Animation" id=1]
 
@@ -41,5 +42,11 @@ playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = ""
+
+[node name="Arrow" type="Sprite" parent="."]
+
+transform/pos = Vector2( 0, -13 )
+texture = ExtResource( 4 )
+offset = Vector2( 0, -23 )
 
 
