@@ -95,6 +95,20 @@ transform/pos = Vector2( 510.323, 110.524 )
 
 transform/pos = Vector2( 948.369, 165.497 )
 
+[node name="Portal5" parent="Portals" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 350.462, 321.675 )
+flip_h = true
+
+[node name="Portal6" parent="Portals" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 113.528, 522.495 )
+flip_h = true
+
+[node name="Portal8" parent="Portals" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 1096.44, 321.382 )
+
 [node name="House_exterior" type="Sprite" parent="."]
 
 visibility/visible = false
