@@ -19,6 +19,13 @@ var Crosshair
 
 var mouse_pos_trans
 
+var Current_level = {
+	Floor = 224,
+	Left = 591,
+	Right = 955,
+	Ceiling = 100
+}
+
 var Grabbed_object = {
 	Grabbed = false,
 	Obj = "",
@@ -42,6 +49,8 @@ func _ready():
 	# Activate portal
 	get_node("Portal/Animation").set_current_animation("Idle")
 	get_node("Portal/Animation").play()
+	get_node("Portal2/Animation").set_current_animation("Idle")
+	get_node("Portal2/Animation").play()
 	
 	set_process(true)
 	
@@ -76,12 +85,32 @@ func post_init_run(dt):
 	# Don't touch this dadadada
 	mouse_pos_trans = get_viewport().get_mouse_pos()*cam_scale + get_node("Camera").get_offset()
 
+	# Gravity
+	if(Char.get_pos().y < Current_level.Floor - Char.get_node("Sprite").get_texture().get_height()/2):
+		Char.fallspeed = Char.fallspeed + Char.grav*dt
+	elif(Input.is_action_pressed("jump")):
+		Char.fallspeed = -4
+	else:
+		Char.fallspeed = 0
+	
+	Char.set_pos(Vector2(Char.get_pos().x, Char.get_pos().y + Char.fallspeed))
+	
+	if(Char.get_pos().y > Current_level.Floor - Char.get_node("Sprite").get_texture().get_height()/2):
+		Char.set_pos(Vector2(Char.get_pos().x, Current_level.Floor - Char.get_node("Sprite").get_texture().get_height()/2))
+
+	print(Char.get_pos())
 	if(Input.is_action_pressed("move_left")):
 		CharAnim.advance(-dt)
-		Char.move(Vector2(-dt*40*Char.move_speed,0))
+		var move_to = Vector2(-dt*40*Char.move_speed,0)
+		
+		if(Char.get_pos().y > Current_level.Floor) or (Char.get_pos().x >= Current_level.Left + Char.get_node("Sprite").get_texture().get_width()/2/7):
+			Char.move(move_to)
 	elif(Input.is_action_pressed("move_right")):
 		CharAnim.advance(dt)
-		Char.move(Vector2(dt*40*Char.move_speed,0))
+		var move_to = Vector2(dt*40*Char.move_speed,0)
+		
+		if(Char.get_pos().y > Current_level.Floor) or (Char.get_pos().x <= Current_level.Right - Char.get_node("Sprite").get_texture().get_width()/2/7):
+			Char.move(move_to)
 	else:
 		CharAnim.seek(0, true)
 		
@@ -92,16 +121,6 @@ func post_init_run(dt):
 		Char.dir = -1
 	Char.get_node("Sprite").set_scale(Vector2(Char.dir,1))
 		
-	# Gravity
-	if(Char.get_pos().y < 202):
-		Char.fallspeed = Char.fallspeed + Char.grav*dt
-	elif(Input.is_action_pressed("jump")):
-		Char.fallspeed = -4
-	else:
-		Char.fallspeed = 0
-	
-	Char.set_pos(Vector2(Char.get_pos().x, Char.get_pos().y + Char.fallspeed))
-		
 	# Camera Movement
 	if charpos.x < campos.x + 250:
 		get_node("Camera").set_offset(Vector2(charpos.x - 250, campos.y))
@@ -109,6 +128,12 @@ func post_init_run(dt):
 		get_node("Camera").set_offset(Vector2(charpos.x - 300, campos.y))
 
 	Char.get_node("Crosshair").set_points(Char.get_pos(), mouse_pos_trans)
+	
+	# Disable crosshair
+	if(Grabbed_object.Grabbed):
+		get_node("Char/Crosshair").hide()
+	else:
+		get_node("Char/Crosshair").show()
 	
 	# Grab an object
 	var crosshair_line = [Char.get_pos(), mouse_pos_trans]
@@ -172,16 +197,34 @@ func post_init_run(dt):
 
 func process_thrown(dt):
 	for v in Thrown_objects:
-		v.Speed = Vector2(v.Speed.x, v.Speed.y + 1)
 		var pos = v.Obj.get_pos()
-		v.Obj.set_pos(Vector2(pos.x + v.Speed.x*dt, pos.y + v.Speed.y*dt))
+		var move_to = Vector2(pos.x + v.Speed.x*dt, pos.y + v.Speed.y*dt)
+		
+		if(pos.x < Current_level.Left):
+			move_to.x = Current_level.Left
+			v.Speed.x = 0
+		if(pos.x > Current_level.Right - v.Obj.get_texture().get_width()):
+			move_to.x = Current_level.Right - v.Obj.get_texture().get_width()
+			v.Speed.x = 0
+		
+		if(pos.y > Current_level.Floor - v.Obj.get_texture().get_height()):
+			move_to.y = Current_level.Floor - v.Obj.get_texture().get_height()
+			v.Speed.x = min(0, v.Speed.x - sign(v.Speed.x)*1)
+			v.Speed.y = 0
+		else:
+			v.Speed.y += 1
+		
+		if(move_to.y < Current_level.Ceiling):
+			move_to.y = Current_level.Ceiling + 1 # Current_level.Ceiling
+
+		v.Obj.set_pos(move_to)
 
 func process_grabbed(line):
 	if(Grabbed_object.Grabbed):
 		var a = get_slope(line)
 		var alpha = atan(a)
 		var res = Vector2()
-		res = Grabbed_object.Dist * Char.dir * Vector2(cos(alpha), sin(alpha)) + Char.get_pos() - Grabbed_object.Delta;
+		res = Grabbed_object.Dist * Char.dir * Vector2(cos(alpha), sin(alpha)/2) + Char.get_pos() - Grabbed_object.Delta;
 		Grabbed_object.Obj.set_pos(res)
 
 func get_slope(line):

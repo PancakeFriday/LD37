@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=1]
+[gd_scene load_steps=11 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://img/Background.png" type="Texture" id=2]
@@ -8,7 +8,8 @@
 [ext_resource path="res://img/Couch.png" type="Texture" id=6]
 [ext_resource path="res://img/Flower.png" type="Texture" id=7]
 [ext_resource path="res://Portal.tscn" type="PackedScene" id=8]
-[ext_resource path="res://img/House.png" type="Texture" id=9]
+[ext_resource path="res://Portal2.tscn" type="PackedScene" id=9]
+[ext_resource path="res://img/House.png" type="Texture" id=10]
 
 [node name="Game" type="Node2D"]
 
@@ -78,10 +79,14 @@ centered = false
 transform/pos = Vector2( 595.01, 165.492 )
 transform/scale = Vector2( 1, 1.00011 )
 
+[node name="Portal2" parent="." instance=ExtResource( 9 )]
+
+transform/pos = Vector2( 749.323, 110.524 )
+
 [node name="House" type="Sprite" parent="."]
 
 visibility/visible = false
 transform/pos = Vector2( 640, 249 )
-texture = ExtResource( 9 )
+texture = ExtResource( 10 )
 
 
