@@ -1,19 +1,19 @@
 [gd_scene load_steps=20 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
-[ext_resource path="res://img/Background.png" type="Texture" id=2]
-[ext_resource path="res://img/House_interior.png" type="Texture" id=3]
-[ext_resource path="res://Char.tscn" type="PackedScene" id=4]
-[ext_resource path="res://img/Computer.png" type="Texture" id=5]
-[ext_resource path="res://Portal.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Portal2.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Portal3.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Canon.tscn" type="PackedScene" id=9]
-[ext_resource path="res://img/House_exterior.png" type="Texture" id=10]
-[ext_resource path="res://img/House.png" type="Texture" id=11]
-[ext_resource path="res://img/Healthbar.png" type="Texture" id=12]
-[ext_resource path="res://img/Healthbar_red.png" type="Texture" id=13]
-[ext_resource path="res://img/Healthbar_green.png" type="Texture" id=14]
+[ext_resource path="res://img/House_interior.png" type="Texture" id=2]
+[ext_resource path="res://Char.tscn" type="PackedScene" id=3]
+[ext_resource path="res://img/Computer.png" type="Texture" id=4]
+[ext_resource path="res://Portal.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Portal2.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Portal3.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Canon.tscn" type="PackedScene" id=8]
+[ext_resource path="res://img/House_exterior.png" type="Texture" id=9]
+[ext_resource path="res://img/House.png" type="Texture" id=10]
+[ext_resource path="res://img/Healthbar.png" type="Texture" id=11]
+[ext_resource path="res://img/Healthbar_red.png" type="Texture" id=12]
+[ext_resource path="res://img/Healthbar_green.png" type="Texture" id=13]
+[ext_resource path="res://img/Background.png" type="Texture" id=14]
 [ext_resource path="res://img/Hurt.png" type="Texture" id=15]
 [ext_resource path="res://img/Game_over.png" type="Texture" id=16]
 [ext_resource path="res://img/Title.png" type="Texture" id=17]
@@ -43,17 +43,12 @@ drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
 
-[node name="Background" type="Sprite" parent="."]
-
-transform/pos = Vector2( 640, 360 )
-texture = ExtResource( 2 )
-
 [node name="House_interior" type="Sprite" parent="."]
 
 transform/pos = Vector2( 640.359, 249 )
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 
-[node name="Char" parent="." instance=ExtResource( 4 )]
+[node name="Char" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 619.931, 202 )
 
@@ -61,7 +56,7 @@ transform/pos = Vector2( 619.931, 202 )
 
 transform/pos = Vector2( 511.815, 164.92 )
 transform/scale = Vector2( 0.993218, 1.00182 )
-texture = ExtResource( 5 )
+texture = ExtResource( 4 )
 
 [node name="Food" type="Node2D" parent="."]
 
@@ -69,36 +64,36 @@ texture = ExtResource( 5 )
 
 editor/display_folded = true
 
-[node name="Portal" parent="Portals" instance=ExtResource( 6 )]
+[node name="Portal" parent="Portals" instance=ExtResource( 5 )]
 
 transform/pos = Vector2( 595.01, 165.492 )
 transform/scale = Vector2( 1, 1.00011 )
 
-[node name="Portal2" parent="Portals" instance=ExtResource( 7 )]
+[node name="Portal2" parent="Portals" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 749.642, 110.469 )
 
-[node name="Portal4" parent="Portals" instance=ExtResource( 7 )]
+[node name="Portal4" parent="Portals" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 510.323, 110.524 )
 
-[node name="Portal3" parent="Portals" instance=ExtResource( 8 )]
+[node name="Portal3" parent="Portals" instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 948.369, 165.497 )
 
-[node name="Portal5" parent="Portals" instance=ExtResource( 8 )]
+[node name="Portal5" parent="Portals" instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 350.462, 319.619 )
 transform/scale = Vector2( 1, 1.03485 )
 flip_h = true
 
-[node name="Portal6" parent="Portals" instance=ExtResource( 8 )]
+[node name="Portal6" parent="Portals" instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 113.528, 497.667 )
 transform/scale = Vector2( 1, 1.42081 )
 flip_h = true
 
-[node name="Portal8" parent="Portals" instance=ExtResource( 8 )]
+[node name="Portal8" parent="Portals" instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 1096.44, 318.685 )
 transform/scale = Vector2( 1, 1.04572 )
@@ -107,52 +102,52 @@ transform/scale = Vector2( 1, 1.04572 )
 
 editor/display_folded = true
 
-[node name="Canon" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 640, 110.5 )
 
-[node name="Canon1" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon1" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 870, 110.5 )
 
-[node name="Canon2" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon2" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 616, 254.5 )
 
-[node name="Canon3" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon3" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 816, 254.5 )
 
-[node name="Canon4" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon4" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 736, 418.5 )
 
-[node name="Canon5" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon5" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 649, 418.5 )
 
-[node name="Canon6" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon6" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 467, 418.5 )
 
-[node name="Canon7" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon7" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 387, 418.5 )
 
-[node name="Canon8" parent="Canons" instance=ExtResource( 9 )]
+[node name="Canon8" parent="Canons" instance=ExtResource( 8 )]
 
 transform/pos = Vector2( 297, 418.5 )
 
 [node name="House_exterior" type="Sprite" parent="."]
 
 transform/pos = Vector2( 640, 249 )
-texture = ExtResource( 10 )
+texture = ExtResource( 9 )
 
 [node name="House" type="Sprite" parent="."]
 
 visibility/visible = false
 transform/pos = Vector2( 640, 249 )
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 
 [node name="Health_Comp" type="Sprite" parent="."]
 
@@ -160,13 +155,13 @@ editor/display_folded = true
 visibility/visible = false
 transform/pos = Vector2( 600, 300 )
 transform/scale = Vector2( 0.45, 0.45 )
-texture = ExtResource( 12 )
+texture = ExtResource( 11 )
 
 [node name="Bar" type="Sprite" parent="Health_Comp"]
 
 visibility/behind_parent = true
 transform/pos = Vector2( -307, -14.5 )
-texture = ExtResource( 13 )
+texture = ExtResource( 12 )
 centered = false
 
 [node name="Health_Pl" type="Sprite" parent="."]
@@ -175,14 +170,19 @@ editor/display_folded = true
 visibility/visible = false
 transform/pos = Vector2( 930, 600 )
 transform/scale = Vector2( 0.45, 0.45 )
-texture = ExtResource( 12 )
+texture = ExtResource( 11 )
 
 [node name="Bar" type="Sprite" parent="Health_Pl"]
 
 visibility/behind_parent = true
 transform/pos = Vector2( -307, -14.5 )
-texture = ExtResource( 14 )
+texture = ExtResource( 13 )
 centered = false
+
+[node name="Background" type="Sprite" parent="."]
+
+transform/pos = Vector2( 640, 360 )
+texture = ExtResource( 14 )
 
 [node name="Hurt_screen" type="Sprite" parent="."]
 
