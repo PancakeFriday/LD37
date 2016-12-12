@@ -10,10 +10,10 @@
 [ext_resource path="res://Canon.tscn" type="PackedScene" id=8]
 [ext_resource path="res://img/House_exterior.png" type="Texture" id=9]
 [ext_resource path="res://img/House.png" type="Texture" id=10]
-[ext_resource path="res://img/Healthbar.png" type="Texture" id=11]
-[ext_resource path="res://img/Healthbar_red.png" type="Texture" id=12]
-[ext_resource path="res://img/Healthbar_green.png" type="Texture" id=13]
-[ext_resource path="res://img/Background.png" type="Texture" id=14]
+[ext_resource path="res://img/Background.png" type="Texture" id=11]
+[ext_resource path="res://img/Healthbar.png" type="Texture" id=12]
+[ext_resource path="res://img/Healthbar_red.png" type="Texture" id=13]
+[ext_resource path="res://img/Healthbar_green.png" type="Texture" id=14]
 [ext_resource path="res://img/Hurt.png" type="Texture" id=15]
 [ext_resource path="res://img/Game_over.png" type="Texture" id=16]
 [ext_resource path="res://img/Title.png" type="Texture" id=17]
@@ -149,19 +149,24 @@ visibility/visible = false
 transform/pos = Vector2( 640, 249 )
 texture = ExtResource( 10 )
 
+[node name="Background" type="Sprite" parent="."]
+
+transform/pos = Vector2( 640, 360 )
+texture = ExtResource( 11 )
+
 [node name="Health_Comp" type="Sprite" parent="."]
 
 editor/display_folded = true
 visibility/visible = false
 transform/pos = Vector2( 600, 300 )
 transform/scale = Vector2( 0.45, 0.45 )
-texture = ExtResource( 11 )
+texture = ExtResource( 12 )
 
 [node name="Bar" type="Sprite" parent="Health_Comp"]
 
 visibility/behind_parent = true
 transform/pos = Vector2( -307, -14.5 )
-texture = ExtResource( 12 )
+texture = ExtResource( 13 )
 centered = false
 
 [node name="Health_Pl" type="Sprite" parent="."]
@@ -170,19 +175,14 @@ editor/display_folded = true
 visibility/visible = false
 transform/pos = Vector2( 930, 600 )
 transform/scale = Vector2( 0.45, 0.45 )
-texture = ExtResource( 11 )
+texture = ExtResource( 12 )
 
 [node name="Bar" type="Sprite" parent="Health_Pl"]
 
 visibility/behind_parent = true
 transform/pos = Vector2( -307, -14.5 )
-texture = ExtResource( 13 )
-centered = false
-
-[node name="Background" type="Sprite" parent="."]
-
-transform/pos = Vector2( 640, 360 )
 texture = ExtResource( 14 )
+centered = false
 
 [node name="Hurt_screen" type="Sprite" parent="."]
 
