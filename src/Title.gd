@@ -1,14 +1,9 @@
 extends Node2D
 
 var Text = {
-	0: "Three Rooms for the posh kings under the sky",
-	1: "Seven for the Dwarf-mates in their halls of stone,",
-	2: "Nine for the machine-like workers doomed to die,",
-	3: "One for the Dark Geek on his dark throne",
-	4: "In the Land of Cubicles where the Shadows lie",
-	5: "One Room to rule them all, One Room to find them,",
-	6: "One Room to bring them all and in the darkness bind them",
-	7: "In the Land of Cubicles where the Shadows lie."
+	0: "One Room to rule them all, One Room to find them,",
+	1: "One Room to bring them all and in the darkness bind them",
+	2: "In the Land of Cubicles where the Shadows lie."
 }
 var TextLabels = {}
 var FadeSpeed = 1

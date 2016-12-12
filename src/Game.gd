@@ -58,8 +58,16 @@ var Falling_objects = []
 
 var Shake_screen_time = 0
 
-var Comp_health = 150.0
+var Comp_health = 100.0
 var Pl_health = 150.0
+
+var hurt_player = 15
+var hurt_color = 0
+
+var Game_over_wait = 5
+var Winner_wait = 5
+
+var fade_time = 2
 
 func _ready():
 	get_node("House").show()
@@ -80,8 +88,9 @@ func _ready():
 	set_process(true)
 	
 	var CouchTex = load("res://img/Couch.png")
-	var FlowerTex= load("res://img/Flower.png")
-	for i in range(0,10):
+	var FlowerTex = load("res://img/Flower.png")
+	var DeskTex = load("res://img/Desk.png")
+	for i in range(0,7):
 		randomize()
 		var SomeCouch = Sprite.new()
 		SomeCouch.set_texture(CouchTex)
@@ -103,13 +112,28 @@ func _ready():
 		pos.y = Levels[index].Floor - FlowerTex.get_height()
 		SomeCouch.set_pos(pos)
 		get_node("Food").add_child(SomeCouch)
+	for i in range(0,5):
+		randomize()
+		var SomeCouch = Sprite.new()
+		SomeCouch.set_texture(DeskTex)
+		SomeCouch.set_centered(false)
+		var pos = Vector2()
+		var index = randi()%3
+		pos.x = rand_range(Levels[index].Left, Levels[index].Right - DeskTex.get_width())
+		pos.y = Levels[index].Floor - DeskTex.get_height()
+		SomeCouch.set_pos(pos)
+		get_node("Food").add_child(SomeCouch)
 	
+	get_node("Game_over").set_scale(Vector2(2.2,2.2))
+	get_node("Winner").set_scale(Vector2(2.2,2.2))
+	get_node("RichTextLabel").add_text("Press [ENTER] to begin\nPress [Space] for Info")
 	pass
 
 func run(dt):
 	var elapsed = OS.get_unix_time() - time_start
 	
-	if elapsed > 1:
+	
+	if elapsed > 0.2:
 		house_fade_in = min(1, house_fade_in+dt)
 		get_node("House").set_opacity(1-house_fade_in)
 	if elapsed > 1.5 and not cam_init_done:
@@ -128,6 +152,18 @@ func run(dt):
 	if cam_init_done:
 		post_init_run(dt)
 		
+func run_menu(dt):
+	pass
+	
+func run_intro(dt):
+	var elapsed = OS.get_unix_time() - time_start
+	fade_time = fade_time - dt
+	get_node("Title").set_modulate(Color(1,1,1,max(0,fade_time/2)))
+	get_node("RichTextLabel").add_color_override("default_color", Color(0,0,0,max(0,fade_time/2)))
+	if fade_time <= 0:
+		return true
+	return false
+		
 func post_init_run(dt):
 	randomize()
 	var elapsed = OS.get_unix_time() - time_start
@@ -144,9 +180,47 @@ func post_init_run(dt):
 		get_node("Camera").set_offset(campos + Vector2(randi()%6 - 3, randi()%6 - 3))
 		Shake_screen_time -= dt
 	campos = get_node("Camera").get_offset()
+	if campos.x < 0:
+		get_node("Camera").set_offset(Vector2(0, campos.y))
+	campos = get_node("Camera").get_offset()
+	
+	if(Pl_health <= 0):
+		Game_over_wait -= dt
+		get_node("Game_over").show()
+		if get_node("Game_over").get_pos().y < campos.y+100:
+			get_node("Game_over").set_pos(get_node("Game_over").get_pos() + Vector2(0, 100*dt))
+		if Game_over_wait <= 0:
+			get_tree().reload_current_scene()
+		return
+	else:
+		get_node("Game_over").set_pos(campos + Vector2(300,10))
+	
+	if(Comp_health <= 0):
+		Winner_wait -= dt
+		get_node("Winner").show()
+		if get_node("Winner").get_pos().y < campos.y+100:
+			get_node("Winner").set_pos(get_node("Winner").get_pos() + Vector2(0, 100*dt))
+		if Winner_wait <= 0:
+			get_tree().reload_current_scene()
+		return
+	else:
+		get_node("Winner").set_pos(campos + Vector2(300,10))
+		
 
 	# Don't touch this dadadada
 	mouse_pos_trans = get_viewport().get_mouse_pos()*cam_scale + get_node("Camera").get_offset()
+	
+	# Hurt the player
+	hurt_player -= dt
+	if(hurt_player <= 0):
+		hurt_player = 10
+		Pl_health -= 10
+		hurt_color = 1
+	if hurt_color > 0:
+		hurt_color -= dt/1.5
+	else:
+		hurt_color = 0
+	get_node("Hurt_screen").set_modulate(Color(1,0,0,hurt_color/3))
 	
 	# Health bars
 	if(campos.x > 0):
@@ -160,9 +234,12 @@ func post_init_run(dt):
 		get_node("Health_Comp").set_pos(Vector2(150,300 + campos.y))
 		get_node("Health_Pl").set_pos(Vector2(440,300 + campos.y))
 		
-	print(Comp_health/150)
-	get_node("Health_Comp/Bar").set_scale(Vector2(Comp_health/150,1))
+	get_node("Health_Comp/Bar").set_scale(Vector2(Comp_health/100,1))
 	get_node("Health_Pl/Bar").set_scale(Vector2(Pl_health/150,1))
+	
+	# Cannons
+	for v in get_node("Canons").get_children():
+		v.run(dt)
 	
 	# Randomize portals
 	if Portal_rando < 0:
@@ -320,7 +397,7 @@ func process_falling(dt):
 			Comp_health -= 10
 			Shake_screen_time = 0.9
 			Falling_objects.remove(i)
-			print(Comp_health)
+			v.free()
 		i += 1
 	
 func process_thrown(dt, portal):
@@ -331,7 +408,7 @@ func process_thrown(dt, portal):
 		
 		if(pos.x < Levels[v.Level].Left):
 			move_to.x = Levels[v.Level].Left
-			v.Speed.x = 0
+			v.Speed.x = -v.Speed.x/4
 		if(pos.x > Levels[v.Level].Right - v.Obj.get_texture().get_width()):
 			move_to.x = Levels[v.Level].Right - v.Obj.get_texture().get_width()
 			v.Speed.x = 0
@@ -362,7 +439,15 @@ func process_grabbed(line):
 		var a = get_slope(line)
 		var alpha = atan(a)
 		var res = Vector2()
-		res = Grabbed_object.Dist * Char.dir * Vector2(cos(alpha), sin(alpha)/2) + Char.get_pos() - Grabbed_object.Delta;
+		res = Grabbed_object.Dist * Char.dir * Vector2(cos(alpha), sin(alpha)) + Char.get_pos() - Grabbed_object.Delta;
+		if res.y < Levels[Current_level].Ceiling:
+			res.y = Levels[Current_level].Ceiling
+		if res.y > Levels[Current_level].Floor - Grabbed_object.Obj.get_texture().get_height():
+			res.y = Levels[Current_level].Floor - Grabbed_object.Obj.get_texture().get_height()
+		if res.x < Levels[Current_level].Left:
+			res.x = Levels[Current_level].Left
+		if res.x > Levels[Current_level].Right - Grabbed_object.Obj.get_texture().get_width():
+			res.x = Levels[Current_level].Right - Grabbed_object.Obj.get_texture().get_width()
 		Grabbed_object.Obj.set_pos(res)
 
 func get_slope(line):
